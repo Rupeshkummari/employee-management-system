@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Departments - EMS{% endblock %}
+{% block page_title %}Department Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div></div>
+    <a href="{% url 'department_add' %}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Department</a>
+</div>
+
+<div class="card fade-in">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-sortable="true">#</th>
+                    <th data-sortable="true">Department Name <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th>Description</th>
+                    <th data-sortable="true">Employees <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th style="text-align:center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept in departments %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="font-bold">
+                        <i class="fa-solid fa-building text-muted" style="margin-right:8px;"></i>{{ dept.name }}
+                    </td>
+                    <td class="text-muted">{{ dept.description|default:"—" }}</td>
+                    <td>
+                        <span class="badge badge-info">{{ dept.employees.count }}</span>
+                    </td>
+                    <td style="text-align:center;">
+                        <a href="{% url 'department_delete' dept.pk %}" class="btn btn-sm btn-secondary text-danger" title="Delete Department" onclick="return confirm('Delete department: {{ dept.name }}?');"><i class="fa-solid fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted" style="padding:30px;">
+                        <i class="fa-solid fa-inbox" style="font-size:2rem; margin-bottom:10px; opacity:0.5;"></i><br>
+                        No departments found. Click <strong>Add Department</strong> to create one.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

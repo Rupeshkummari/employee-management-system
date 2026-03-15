@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Employees - EMS{% endblock %}
+{% block page_title %}Employee Directory{% endblock %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 15px;">
+        <div class="d-flex gap-2 align-items-center">
+            <div style="position: relative; width: 250px;">
+                <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 12px; color: var(--text-muted);"></i>
+                <input type="text" id="tableSearch" class="form-control" style="padding-left: 35px;" placeholder="Search employees..." value="{{ query }}">
+            </div>
+            
+            <form method="GET" class="d-flex gap-2">
+                {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+                <select name="department" class="form-control" onchange="this.form.submit()" style="width: auto;">
+                    <option value="">All Departments</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if request.GET.department == dept.id|stringformat:"s" %}selected{% endif %}>{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        
+        <a href="{% url 'employee_add' %}" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Add Employee
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table" id="employeesTable">
+            <thead>
+                <tr>
+                    <th data-sortable="true">ID <i class="fa-solid fa-sort text-muted" style="margin-left: 5px;"></i></th>
+                    <th data-sortable="true">Name <i class="fa-solid fa-sort text-muted" style="margin-left: 5px;"></i></th>
+                    <th data-sortable="true">Department <i class="fa-solid fa-sort text-muted" style="margin-left: 5px;"></i></th>
+                    <th data-sortable="true">Designation <i class="fa-solid fa-sort text-muted" style="margin-left: 5px;"></i></th>
+                    <th data-sortable="true">Status <i class="fa-solid fa-sort text-muted" style="margin-left: 5px;"></i></th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td class="font-bold">{{ emp.employee_id }}</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if emp.photo %}
+                                <img src="{{ emp.photo.url }}" alt="{{ emp.name }}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                                <div style="width: 35px; height: 35px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;">
+                                    {{ emp.name|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+                            
+                            <div>
+                                <div style="font-weight: 500;">{{ emp.name }}</div>
+                                <div class="text-muted" style="font-size: 0.8rem;">{{ emp.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ emp.department.name|default:"-" }}</td>
+                    <td>{{ emp.designation }}</td>
+                    <td>
+                        {% if emp.status == 'active' %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; white-space: nowrap;">
+                        <a href="{% url 'employee_detail' emp.pk %}" class="btn btn-sm btn-secondary" title="View"><i class="fa-solid fa-eye"></i></a>
+                        <a href="{% url 'employee_edit' emp.pk %}" class="btn btn-sm btn-secondary text-info" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                        <a href="{% url 'employee_delete' emp.pk %}" class="btn btn-sm btn-secondary text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this employee?');"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted" style="padding: 30px;">
+                        <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i><br>
+                        No employees found matching your criteria.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Summary / Dummy Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3 text-muted" style="font-size: 0.9rem;">
+        <div>Showing all {{ employees|length }} entries</div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-secondary" disabled>&laquo; Prev</button>
+            <button class="btn btn-sm btn-primary">1</button>
+            <button class="btn btn-sm btn-secondary" disabled>Next &raquo;</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

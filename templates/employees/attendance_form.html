@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mark Attendance - EMS{% endblock %}
+{% block page_title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<div class="card fade-in" style="max-width: 700px; margin: 0 auto;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="fa-solid fa-clipboard-check text-primary"></i> Mark Attendance</h3>
+        <a href="{% url 'attendance_list' %}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom:24px;">
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group">
+                <label for="employee" class="form-label">Employee <span class="text-danger">*</span></label>
+                <select id="employee" name="employee" class="form-control" required>
+                    <option value="" disabled selected>Select Employee</option>
+                    {% for emp in employees %}
+                        <option value="{{ emp.pk }}">{{ emp.employee_id }} — {{ emp.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                <input type="date" id="date" name="date" class="form-control" value="{{ today }}" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                    <option value="half_day">Half Day</option>
+                    <option value="leave">Leave</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="check_in" class="form-label">Check In Time</label>
+                <input type="time" id="check_in" name="check_in" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="check_out" class="form-label">Check Out Time</label>
+                <input type="time" id="check_out" name="check_out" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="remarks" class="form-label">Remarks</label>
+            <textarea id="remarks" name="remarks" class="form-control" rows="3" placeholder="Optional remarks..."></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="{% url 'attendance_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Record</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - EMS{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid fade-in">
+    <!-- Stat Card 1 -->
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-blue">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Total Employees</h4>
+            <h2>{{ total_employees }}</h2>
+        </div>
+    </div>
+
+    <!-- Stat Card 2 -->
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-green">
+            <i class="fa-solid fa-user-check"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Present Today</h4>
+            <h2>{{ present_today }}</h2>
+        </div>
+    </div>
+
+    <!-- Stat Card 3 -->
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-purple">
+            <i class="fa-solid fa-building"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Departments</h4>
+            <h2>{{ total_departments }}</h2>
+        </div>
+    </div>
+
+    <!-- Stat Card 4 -->
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-orange">
+            <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Active Employees</h4>
+            <h2>{{ active_employees }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card fade-in" style="animation-delay: 0.1s;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="fa-solid fa-clock-rotate-left"></i> Recently Added Employees</h3>
+        <a href="{% url 'employee_list' %}" class="btn btn-secondary btn-sm">View All <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Emp ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in recent_employees %}
+                <tr>
+                    <td class="font-bold">{{ emp.employee_id }}</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if emp.photo %}
+                                <img src="{{ emp.photo.url }}" alt="{{ emp.name }}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                                <div style="width: 30px; height: 30px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+                                    {{ emp.name|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+                            {{ emp.name }}
+                        </div>
+                    </td>
+                    <td>{{ emp.department.name|default:"-" }}</td>
+                    <td>{{ emp.designation }}</td>
+                    <td>
+                        {% if emp.status == 'active' %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted" style="padding: 20px;">No employees added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

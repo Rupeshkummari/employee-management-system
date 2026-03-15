@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Employee Management System{% endblock %}</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light text-dark">
+    {% if user.is_authenticated %}
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-users-gear"></i> <span class="sidebar-text">EMS Admin</span></h2>
+                <button class="toggle-btn" id="sidebarToggle" aria-label="Toggle Sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            <ul class="nav-links mt-4">
+                <li>
+                    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="fa-solid fa-chart-pie"></i> <span class="sidebar-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'employee_list' %}" class="{% if request.resolver_match.url_name == 'employee_list' or request.resolver_match.url_name == 'employee_add' or request.resolver_match.url_name == 'employee_edit' or request.resolver_match.url_name == 'employee_detail' %}active{% endif %}">
+                        <i class="fa-solid fa-users"></i> <span class="sidebar-text">Employees</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'department_list' %}" class="{% if request.resolver_match.url_name == 'department_list' or request.resolver_match.url_name == 'department_add' %}active{% endif %}">
+                        <i class="fa-solid fa-building"></i> <span class="sidebar-text">Departments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance_list' %}" class="{% if 'attendance' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fa-solid fa-calendar-check"></i> <span class="sidebar-text">Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'salary_list' %}" class="{% if request.resolver_match.url_name == 'salary_list' %}active{% endif %}">
+                        <i class="fa-solid fa-money-bill-wave"></i> <span class="sidebar-text">Salary</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'leave_list' %}" class="{% if request.resolver_match.url_name == 'leave_list' %}active{% endif %}">
+                        <i class="fa-solid fa-calendar-xmark"></i> <span class="sidebar-text">Leave</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <h3 class="page-title">{% block page_title %}Dashboard{% endblock %}</h3>
+                </div>
+                <div class="nav-right">
+                    <div class="user-profile">
+                        <span class="user-name">Welcome, {{ user.username }}</span>
+                        <div class="avatar">
+                            <i class="fa-solid fa-user-circle"></i>
+                        </div>
+                        <a href="{% url 'logout' %}" class="btn-logout" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alerts -->
+            <div class="alerts-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade-in">
+                            <span>{{ message }}</span>
+                            <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+    {% else %}
+        {% block login_content %}
+        {% endblock %}
+    {% endif %}
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

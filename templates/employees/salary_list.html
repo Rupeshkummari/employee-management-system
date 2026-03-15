@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Salary & Payroll - EMS{% endblock %}
+{% block page_title %}Salary & Payroll{% endblock %}
+
+{% block content %}
+<!-- Summary Cards -->
+<div class="dashboard-grid fade-in" style="margin-bottom: 24px;">
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-green">
+            <i class="fa-solid fa-money-bill-wave"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Total Payroll</h4>
+            <h2>${{ total_payroll|floatformat:2 }}</h2>
+        </div>
+    </div>
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-blue">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Active Employees</h4>
+            <h2>{{ employees|length }}</h2>
+        </div>
+    </div>
+    <div class="card stat-card" style="margin-bottom: 0;">
+        <div class="stat-icon icon-orange">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="stat-info">
+            <h4>Avg. Salary</h4>
+            <h2>${{ avg_salary|floatformat:2 }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card fade-in" style="animation-delay: 0.1s;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4><i class="fa-solid fa-file-invoice-dollar"></i> Salary Register</h4>
+        <div style="position:relative; width:250px;">
+            <i class="fa-solid fa-search" style="position:absolute; left:12px; top:12px; color:var(--text-muted);"></i>
+            <input type="text" id="tableSearch" class="form-control" style="padding-left:35px;" placeholder="Search employees...">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-sortable="true">Emp ID <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th data-sortable="true">Name <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th data-sortable="true">Department <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th data-sortable="true">Designation <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th data-sortable="true">Salary <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td class="font-bold">{{ emp.employee_id }}</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if emp.photo %}
+                                <img src="{{ emp.photo.url }}" alt="{{ emp.name }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                            {% else %}
+                                <div style="width:30px; height:30px; border-radius:50%; background-color:var(--primary-light); color:var(--primary-color); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.85rem;">
+                                    {{ emp.name|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+                            {{ emp.name }}
+                        </div>
+                    </td>
+                    <td>{{ emp.department.name|default:"—" }}</td>
+                    <td>{{ emp.designation }}</td>
+                    <td class="font-bold text-success">${{ emp.salary|floatformat:2 }}</td>
+                    <td>
+                        {% if emp.status == 'active' %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted" style="padding:30px;">No employee salary records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

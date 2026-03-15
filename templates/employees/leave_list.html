@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Leave Management - EMS{% endblock %}
+{% block page_title %}Leave Management{% endblock %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4><i class="fa-solid fa-calendar-xmark"></i> Leave Requests</h4>
+        <!-- Trigger modal or link to a form -->
+        <button class="btn btn-primary" onclick="document.getElementById('leaveModal').style.display='flex';">
+            <i class="fa-solid fa-plus"></i> Apply Leave
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th data-sortable="true">Employee <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Days</th>
+                    <th>Status</th>
+                    <th style="text-align:center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="font-bold">{{ leave.employee_name }}</td>
+                    <td>{{ leave.leave_type }}</td>
+                    <td>{{ leave.from_date }}</td>
+                    <td>{{ leave.to_date }}</td>
+                    <td><span class="badge badge-info">{{ leave.days }} day(s)</span></td>
+                    <td>
+                        {% if leave.status == 'Approved' %}
+                            <span class="badge badge-success">Approved</span>
+                        {% elif leave.status == 'Rejected' %}
+                            <span class="badge badge-danger">Rejected</span>
+                        {% else %}
+                            <span class="badge badge-warning">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn btn-sm btn-secondary text-success" title="Approve"><i class="fa-solid fa-check"></i></button>
+                        <button class="btn btn-sm btn-secondary text-danger" title="Reject"><i class="fa-solid fa-xmark"></i></button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted" style="padding:30px;">
+                        <i class="fa-solid fa-calendar-check" style="font-size:2.5rem; opacity:0.4;"></i><br><br>
+                        No leave requests found. Employees haven't applied yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Leave Application Modal -->
+<div id="leaveModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:500px; margin:20px;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3><i class="fa-solid fa-calendar-plus"></i> Apply for Leave</h3>
+            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('leaveModal').style.display='none';">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom:20px;">
+        <p class="text-muted" style="margin-bottom:20px;">
+            <i class="fa-solid fa-info-circle"></i>
+            Leave management module requires backend integration. Connect your leave model to fully enable this feature.
+        </p>
+        <div class="form-group">
+            <label class="form-label">Employee</label>
+            <select class="form-control">
+                <option>Select Employee</option>
+                {% for emp in employees_list %}
+                    <option>{{ emp.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">From Date</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">To Date</label>
+                <input type="date" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Leave Type</label>
+            <select class="form-control">
+                <option>Sick Leave</option>
+                <option>Casual Leave</option>
+                <option>Annual Leave</option>
+                <option>Maternity/Paternity Leave</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Reason</label>
+            <textarea class="form-control" rows="3" placeholder="Reason for leave..."></textarea>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-secondary" onclick="document.getElementById('leaveModal').style.display='none';">Cancel</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

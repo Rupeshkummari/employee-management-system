@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Attendance - EMS{% endblock %}
+{% block page_title %}Attendance Records{% endblock %}
+
+{% block content %}
+<!-- Date Picker & Mark Button -->
+<div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 15px;">
+    <form method="GET" class="d-flex align-items-center gap-2">
+        <label for="date" style="font-weight:500; white-space:nowrap;">View Date:</label>
+        <input type="date" id="date" name="date" class="form-control" value="{{ date }}" style="width:auto;" onchange="this.form.submit()">
+    </form>
+    <a href="{% url 'attendance_mark' %}" class="btn btn-primary">
+        <i class="fa-solid fa-clipboard-check"></i> Mark Attendance
+    </a>
+</div>
+
+<!-- Attendance Table -->
+<div class="card fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4><i class="fa-solid fa-calendar-day"></i> Attendance for <span style="color:var(--primary-color);">{{ date }}</span></h4>
+        <div class="d-flex gap-2">
+            <span class="badge badge-success">Present: {{ attendance|length }}</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-sortable="true">Employee Name <i class="fa-solid fa-sort text-muted" style="margin-left:5px;"></i></th>
+                    <th>Status</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rec in attendance %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if rec.employee.photo %}
+                                <img src="{{ rec.employee.photo.url }}" alt="{{ rec.employee.name }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                            {% else %}
+                                <div style="width:30px; height:30px; border-radius:50%; background-color:var(--primary-light); color:var(--primary-color); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem;">
+                                    {{ rec.employee.name|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <div style="font-weight:500;">{{ rec.employee.name }}</div>
+                                <div class="text-muted" style="font-size:0.8rem;">{{ rec.employee.employee_id }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if rec.status == 'present' %}
+                            <span class="badge badge-success">Present</span>
+                        {% elif rec.status == 'absent' %}
+                            <span class="badge badge-danger">Absent</span>
+                        {% elif rec.status == 'half_day' %}
+                            <span class="badge badge-warning">Half Day</span>
+                        {% else %}
+                            <span class="badge badge-info">Leave</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ rec.check_in|time:"H:i"|default:"—" }}</td>
+                    <td>{{ rec.check_out|time:"H:i"|default:"—" }}</td>
+                    <td class="text-muted">{{ rec.remarks|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted" style="padding:30px;">
+                        <i class="fa-solid fa-calendar-xmark" style="font-size:2rem; margin-bottom:10px; opacity:0.5;"></i><br>
+                        No attendance records found for this date.
+                        <br><a href="{% url 'attendance_mark' %}" class="btn btn-primary btn-sm" style="margin-top:15px;">Mark Attendance Now</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
