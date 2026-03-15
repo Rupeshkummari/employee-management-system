@@ -1,105 +1,96 @@
-# Employee Management System
+# 🏢 Employee Management System (EMS) - Professional Edition
 
-A full-stack web application to manage employee profiles, department assignments, and attendance records — built with Django and Python.
+A high-performance, full-stack web application designed for seamless employee management, attendance tracking, and payroll oversight. This project features a clean, classic, and professional UI built with a modern design system.
 
-## Tech Stack
+---
 
-| Layer     | Technology                          |
-|-----------|-------------------------------------|
-| Frontend  | HTML5, CSS3, Bootstrap, JavaScript  |
-| Backend   | Python 3.12, Django 5.1             |
-| Database  | SQLite3 (easily switchable to MySQL)|
-| Auth      | Django built-in authentication      |
-| Tools     | Postman, Git, VS Code               |
+## 📸 Interactive UI Preview
 
-## Features
+| **Professional Dashboard** | **Employee Directory** |
+|:---:|:---:|
+| ![Dashboard](templates/static/images/dashboard.png) | ![Employees](templates/static/images/employees.png) |
+| *Real-time stats & recent updates* | *Advanced search, sort & filters* |
 
-- Admin login with protected dashboard
-- Employee CRUD — Add, view, edit, delete employee records
-- Employee photo upload and profile display
-- Department management — Add and manage departments
-- Attendance tracking — Mark daily attendance (Present, Absent, Half Day, Leave)
-- Check-in and check-out time recording
-- Filter employees by department or search by name
-- Dashboard with real-time stats — total employees, present today, department count
-- Django Admin panel for backend management
+| **Employee Profile** | **Attendance Register** |
+|:---:|:---:|
+| ![Profile](templates/static/images/profile.png) | *Detailed attendance tracking per employee* |
 
-## Database Schema
+---
 
-```
-Department      Employee              Attendance
-----------      --------              ----------
-id              id                    id
-name            employee_id           employee (FK)
-description     name                  date
-                email                 status
-                phone                 check_in
-                gender                check_out
-                department (FK)       remarks
-                designation
-                salary
-                join_date
-                status
-                photo
-```
+## 💎 Premium Features
 
-## Project Structure
+- **Professional Dashboard**: Summary cards for Total Employees, Active Status, Departments, and Daily Attendance.
+- **Dynamic Employee Directory**:
+  - AJAX-like Search & Department Filtering.
+  - Interactive Table Row Sorting (Name, ID, Department).
+  - Status Badges (Active/Inactive) & Pagination.
+- **Attendance Management**: Mark daily status (Present, Absent, Leave) with check-in/out times.
+- **Salary & Payroll**: Automated payroll summary with average salary calculations.
+- **Leave Management**: System for viewing and applying for employee leaves.
+- **Advanced Admin Panel**: Custom fieldsets, searchable logs, and employee-count aggregations for departments.
+- **Seeded Data**: One-command setup with 15 professional employee profiles and sample attendance history.
 
-```
-employee-management-system/
-├── core/
-│   ├── manage.py
-│   └── core/
-│       ├── settings.py
-│       ├── urls.py
-│       ├── wsgi.py
-│       └── asgi.py
-├── employees/
-│   ├── models.py        # Employee, Department, Attendance models
-│   ├── views.py         # All CRUD and auth views
-│   ├── urls.py          # URL routing
-│   ├── admin.py         # Admin panel config
-│   └── templates/
-│       └── employees/   # HTML templates
-├── templates/
-│   └── static/
-│       ├── css/
-│       └── js/
-├── requirements.txt
-└── .gitignore
-```
+---
 
-## Setup and Run Locally
+## 🛠️ Tech Stack
 
+- **Backend**: Python 3.12, Django 5.1 (Robust & Scalable)
+- **Frontend**: Custom Modern CSS (Vanilla), Inter Typography, FontAwesome 6, Vanilla JavaScript
+- **Database**: SQLite3 (Production-ready abstraction for quick setup)
+- **Styling**: Responsive Design (Mobile, Tablet, Desktop)
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Prerequisites
+Ensure you have Python installed.
+
+### 2. Setup
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/Rupeshkummari/employee-management-system.git
 cd employee-management-system/core
 
-# 2. Create and activate virtual environment
-python -m venv env
-env\Scripts\activate        # Windows
-source env/bin/activate     # Mac/Linux
+# Create virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+```
 
-# 3. Install dependencies
+### 3. Install & Seed
+```bash
+# Install Django and dependencies
 pip install -r ../requirements.txt
 
-# 4. Run migrations
-python manage.py makemigrations
+# Run migrations and setup professional sample data
+python manage.py makemigrations employees
 python manage.py migrate
+python manage.py seed_data
+```
 
-# 5. Create admin user
-python manage.py createsuperuser
-
-# 6. Start the server
+### 4. Run Server
+```bash
 python manage.py runserver
 ```
 
-Visit: http://127.0.0.1:8000
+**Visit**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Admin Username**: `admin`
+- **Admin Password**: `admin123`
 
-## Developer
+---
+
+## 📁 Project Architecture
+
+- `core/`: Project configuration and settings.
+- `employees/`: Primary application logic (Models, Views, URLs).
+- `templates/`: Professional HTML structure using Template Inheritance.
+- `static/`: Custom CSS/JS and production-ready images.
+
+---
+
+## 👨‍💻 Developed By
 
 **Rupesh K**
 - GitHub: [github.com/Rupeshkummari](https://github.com/Rupeshkummari)
 - LinkedIn: [linkedin.com/in/kummari-rupesh-76325a251](https://linkedin.com/in/kummari-rupesh-76325a251)
-- Email: rupeshkummari223@gmail.com
+- Email: [rupeshkummari223@gmail.com](mailto:rupeshkummari223@gmail.com)
